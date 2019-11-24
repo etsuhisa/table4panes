@@ -1,10 +1,14 @@
-# Table4Panes 0.1.0
+# Table4Panes 1.0.0
  HTMLを変更せずにjavaScriptだけでテーブルを4つのペインに分割します。
 
 ## デモ
 以下のHTMLファイルを参照してください。
-* demo-table4panes.html
-* demo-jquery-table4panes.html
+* demo-table4panes.html         基本的な呼び出し
+* demo-table4panes_event.html   ペインに対するイベント設定
+* demo-table4panes-jquery.html  jQueryでの呼び出し
+* demo-table4panes_multi.html   複数テーブルの一括指定
+* demo-table4panes_span.html    colspan/rowspanを持つテーブル
+* demo-table4panes-min.html     minファイル
 
 ## Usage
 

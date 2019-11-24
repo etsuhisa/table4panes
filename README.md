@@ -1,10 +1,14 @@
-# Table4Panes 0.1.0
+# Table4Panes 1.0.0
  Split the table into 4 panes with only JavaScript without changing the HTML.
 
 ## Demo
 Refer the following HTML files:
-* demo-table4panes.html
-* demo-jquery-table4panes.html
+* demo-table4panes.html         Basic call
+* demo-table4panes_event.html   Event settings for panes
+* demo-table4panes-jquery.html  Call with jQuery
+* demo-table4panes_multi.html   Batch specification of multiple tables
+* demo-table4panes_span.html    Table with colspan / rowspan
+* demo-table4panes-min.html     min file
 
 ## Usage
 
