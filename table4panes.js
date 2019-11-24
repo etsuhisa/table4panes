@@ -1,5 +1,5 @@
 /**
- * jquery-table4panes 1.0.0 - jQuery plugin to split the table to four panes.
+ * jquery-table4panes 1.0.1 - jQuery plugin to split the table to four panes.
  *
  * Copyright (c) 2019 ASAI Etsuhisa
  * This software is released under the MIT License.
@@ -564,9 +564,9 @@ var Table4Panes = (function() {
 	Table4Panes.prototype.apply = function(col_num, row_num, settings){
 		var top_nodes = [];
 		var elms = document.querySelectorAll(this.target);
-		elms.forEach(function(elm, i) {
-			top_nodes.push(table4panes_body.call(elm, i, col_num, row_num, settings));
-		});
+		for(i = 0; i < elms.length; i++){
+			top_nodes.push(table4panes_body.call(elms[i], i, col_num, row_num, settings));
+		}
 		return top_nodes.length == 1 ? top_nodes[0] : top_nodes;
 	}
 	/**

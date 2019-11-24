@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.1] - 2019-11-24
+
+- Fix for IE not working.
+
 ## [1.0.0] - 2019-11-24
 Release all previous implementations as version 1.0.0.
 

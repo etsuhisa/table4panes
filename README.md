@@ -1,4 +1,4 @@
-# Table4Panes 1.0.0
+# Table4Panes 1.0.1
  Split the table into 4 panes with only JavaScript without changing the HTML.
 
 ## Demo
