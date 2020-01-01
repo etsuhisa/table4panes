@@ -3,11 +3,10 @@
 <script src="table4panes.js"></script>
 <script type="text/javascript">
 window.onload = function(){
-  var demo_table = new Table4Panes("#demo-table");
-  var node = demo_table.apply(6,4,{"display-method":"table-cell", "right-width":"400px", "bottom-height":"200px", "fix-width-rows":"dummy", "prefix": "mypanes"});
-  node.querySelectorAll("div.mypanes table").forEach(function(elm){
-    elm.style.borderCollapse = "collapse";
-  });
+  var tbl = document.getElementById("demo-table");
+  tbl.style.borderCollapse = "collapse";
+  var demo_table = new Table4Panes(tbl);
+  demo_table.apply(6,4,{"display-method":"table-cell", "right-width":"400px", "bottom-height":"200px", "fix-width-rows":"dummy", "prefix": "mypanes"});
 };
 </script>
 <title>table4panes demo</title>

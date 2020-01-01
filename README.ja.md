@@ -49,13 +49,13 @@ $.fn.table4panes(col_num, row_num, settings)
 JavaScript�̏ꍇ
 ```js
 var table4panes = new Table4Panes("#demo-table");
-var div = table4panes.apply(4,3,{"display-method":"flex", "width":"100%", "height":"100%", "fit":true});
+var div = table4panes.apply(4,3,{"display-method":"flex", "fit":true});
 ```
 
 jQuery�̏ꍇ
 ```js
 $(function(){
-    $("#demo-table").table4panes(4,3,{"display-method":"flex", "width":"100%", "height":"100%", "fit":true});
+    $("#demo-table").table4panes(4,3,{"display-method":"flex", "fit":true});
 });
 ```
 

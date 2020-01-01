@@ -1,7 +1,7 @@
 /**
- * jquery-table4panes 1.0.1 - jQuery plugin to split the table to four panes.
+ * jquery-table4panes 1.0.2 - jQuery plugin to split the table to four panes.
  *
- * Copyright (c) 2019 ASAI Etsuhisa
+ * Copyright (c) 2020 ASAI Etsuhisa
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  *
@@ -77,26 +77,54 @@ var Table4Panes = (function() {
 })();
 (function(){
 	/**
+	 * addClassList(class-name)
+	 * If classList is not defined, add to className with blank character.
+	 * @param this (in) node
+	 * @param name (in) class name
+	 * @return following each function
+	 */
+	if(typeof document.classList == "undefined"){
+		var addClassList = function(name) {
+			return this.className += " " + name;
+		}
+	}
+	else{
+		var addClassList = function(param) {
+			return this.classList.add(name);
+		}
+	}
+	if(typeof document.addEventListener == "undefined"){
+		var addEventListener = function(type, listener) {
+			return this.attachEvent("on"+type, listener);
+		}
+	}
+	else{
+		var addEventListener = function(type, listener) {
+			return this.addEventListener(type, listener);
+		}
+	}
+	/**
 	 * getSubtractedNums(num)
-	 * Get the array with the number of rowspan subtracted.
+	 * Get the array with the number of rowspan/colspan subtracted.
 	 * @param this (in) parent node of tr
 	 * @param num (in) number to move
 	 * @return array of number of column to move.
 	 */
 	var getSubtractedNums = function(num){
-		var nums = new Array(this.children.length);
+		var trs = this.getElementsByTagName("tr");
+		var nums = new Array(trs.length);
 		/** Compatible with browsers where 'fill' is not defined */
 		if(Array.prototype.fill){
 			nums.fill(num);
 		}
 		else{
-			for(var i = 0; i < this.children.length; i++){
+			for(var i = 0; i < trs.length; i++){
 				nums[i] = num;
 			}
 		}
 		/** tr list */
-		for(var i = 0; i < this.children.length; i++){
-			var tr = this.children[i];
+		for(var i = 0; i < trs.length; i++){
+			var tr = trs[i];
 			/** th/td list */
 			for(var j = 0; j < nums[i] && j < tr.children.length; j++){
 				var td = tr.children[j];
@@ -178,7 +206,12 @@ var Table4Panes = (function() {
 		var style = getStyle(elm);
 		if(style.width.indexOf("px") == -1){
 			var rect = elm.getBoundingClientRect();
-			width = rect.width;
+			if(typeof rect.width == "undefined"){
+				width = rect.right - rect.left;
+			}
+			else{
+				width = rect.width;
+			}
 		}
 		else{
 			width = parseFloat(style.width);
@@ -195,7 +228,12 @@ var Table4Panes = (function() {
 		var style = getStyle(elm);
 		if(style.height.indexOf("px") == -1){
 			var rect = elm.getBoundingClientRect();
-			height = rect.height;
+			if(typeof rect.height == "undefined"){
+				height = rect.bottom - rect.top;
+			}
+			else{
+				height = rect.height;
+			}
 		}
 		else{
 			height = parseFloat(style.height);
@@ -215,7 +253,7 @@ var Table4Panes = (function() {
 			elms = this.children;
 		}
 		else{
-			var trs = this.querySelectorAll("tr");
+			var trs = this.getElementsByTagName("tr");
 			elms = trs[row_num].children;
 		}
 		for(var i = 0; i < elms.length; i++){
@@ -230,7 +268,7 @@ var Table4Panes = (function() {
 	 */
 	var getHeightRows = function(){
 		var arr = [];
-		var elms = this.querySelectorAll("tr");
+		var elms = this.getElementsByTagName("tr");
 		for(var i = 0; i < elms.length; i++){
 			arr.push(Math.ceil(getHeight(elms[i])));
 		}
@@ -250,7 +288,7 @@ var Table4Panes = (function() {
 			elms = this.children;
 		}
 		else{
-			var trs = this.querySelectorAll("tr");
+			var trs = this.getElementsByTagName("tr");
 			elms = trs[row_num].children;
 		}
 		for(var i = 0; i < elms.length; i++){
@@ -266,7 +304,7 @@ var Table4Panes = (function() {
 	 * @return this
 	 */
 	var reapplyWidthCols = function(row_num){
-		var trs = this.querySelectorAll("tr");
+		var trs = this.getElementsByTagName("tr");
 		var width_cols = [];
 		for(var i = row_num[0]; i < trs.length && i < row_num[1]+1; i++){
 			width_cols.push(getWidthCols.call(trs[i], null));
@@ -284,7 +322,7 @@ var Table4Panes = (function() {
 	 * @return this.
 	 */
 	var setHeightRows = function(arr){
-		var elms = this.querySelectorAll("tr");
+		var elms = this.getElementsByTagName("tr");
 		for(var i = 0; i < elms.length; i++){
 			setFixHeight.call(elms[i], arr[i]);
 		}
@@ -328,7 +366,7 @@ var Table4Panes = (function() {
 	var createDummyRow = function(col_num){
 		var dummy = {};
 		var tr = document.createElement("tr");
-		var trs = this.querySelectorAll("tr");
+		var trs = this.getElementsByTagName("tr");
 		var elms = trs[0].children;
 		for(var i = 0; i < elms.length; i++){
 			for(var j = 0; j < elms[i].colSpan; j++){
@@ -378,8 +416,8 @@ var Table4Panes = (function() {
 	 * @param nodes (in) child nodes
 	 * @return new node.
 	 */
-	var insert_first = function(selector, new_node){
-		var selnode = this.querySelectorAll(selector);
+	var insert_first = function(tag, new_node){
+		var selnode = this.getElementsByTagName(tag);
 		if(selnode.length == 0){
 			this.appendChild(new_node);
 		}
@@ -387,6 +425,13 @@ var Table4Panes = (function() {
 			selnode[0].parentNode.insertBefore(new_node, selnode[0]);
 		}
 		return new_node;
+	}
+	/**
+	 * Get cell on table.
+	 */
+	var getCellOnTable = function(col_num, row_num){
+		var nums = getSubtractedNums.call(this, col_num);
+		return this.getElementsByTagName("tr")[row_num].children[nums[row_num]];
 	}
 	/**
 	 * Body of table4panes.
@@ -425,16 +470,18 @@ var Table4Panes = (function() {
 			reapplyWidthCols.call(this, fix_width_rows); /* Fix width of columns */
 		}
 		var row_heights = getHeightRows.call(this); /* Get height of rows */
+		setHeightRows.call(this, row_heights);
 		/** Prepare to split the table. */
 		this.style.tableLayout = "fixed";
-		this.classList.add("pane");
+		addClassList.call(this, "pane");
+		/** Get rects of top-left */
+		var rect_table = this.getBoundingClientRect();
+		var rect_cross = getCellOnTable.call(this, col_num, row_num).getBoundingClientRect();
 		/** Move rows/columns. Set height/width. Wrap with div node. */
 		var table_bottom_right = this;
 		var table_bottom_left = moveToNewTable.call(table_bottom_right, "col", col_num);
 		var div_right = wrap.call(table_bottom_right, "div", id_right);
 		var div_left = wrap.call(table_bottom_left, "div", id_left);
-		setHeightRows.call(table_bottom_right, row_heights);
-		setHeightRows.call(table_bottom_left, row_heights);
 		var table_top_right = moveToNewTable.call(table_bottom_right, "row", row_num);
 		var table_top_left = moveToNewTable.call(table_bottom_left, "row", row_num);
 		/** Insert tables so that they are in the order of top left, bottom left, top right, bottom right. */
@@ -443,6 +490,7 @@ var Table4Panes = (function() {
 		/** Wrap table with div node. */
 		var div_table4panes = wrap.call(div_right, "div", id_table4panes);
 		div_table4panes.insertBefore(div_left, div_right);
+		div_left.style.width = Math.ceil(rect_cross.left - rect_table.left) + 1;
 		/** Insert the dummy rows to top of each pane. */
 		if(dummy_row){
 			insert_first.call(table_top_left, "tr", dummy_row.left_tr);
@@ -462,13 +510,13 @@ var Table4Panes = (function() {
 		var div_top_right = wrap.call(table_top_right, "div", id_top_right);
 		var div_top_left = wrap.call(table_top_left, "div", id_top_left);
 		/** Add classes for each div nodes. */
-		div_table4panes.classList.add(prefix);
-		div_right.classList.add(prefix+"-right");
-		div_left.classList.add(prefix+"-left");
-		div_top_left.classList.add(prefix+"-top");
-		div_top_right.classList.add(prefix+"-top");
-		div_bottom_left.classList.add(prefix+"-bottom");
-		div_bottom_right.classList.add(prefix+"-bottom");
+		addClassList.call(div_table4panes, prefix);
+		addClassList.call(div_right, prefix+"-right");
+		addClassList.call(div_left, prefix+"-left");
+		addClassList.call(div_top_left, prefix+"-top");
+		addClassList.call(div_top_right, prefix+"-top");
+		addClassList.call(div_bottom_left, prefix+"-bottom");
+		addClassList.call(div_bottom_right, prefix+"-bottom");
 		/** Set overflow style for each div node. */
 		div_bottom_right.style.overflowX = "scroll";
 		div_bottom_right.style.overflowY = "scroll";
@@ -500,7 +548,7 @@ var Table4Panes = (function() {
 			break;
 		}
 		/** Set height/width from settings. */
-		Object.keys(settings).forEach(function(param){
+		for(var param in settings){
 			switch(param){
 			case "height" :
 				setFixHeight.call(div_table4panes, settings[param]);
@@ -517,41 +565,65 @@ var Table4Panes = (function() {
 				setFixWidth.call(div_table4panes, settings[param]);
 				break;
 			case "left-width" :
+				setFixWidth.call(div_left, settings[param]);
 				setFixWidth.call(div_top_left, settings[param]);
 				setFixWidth.call(div_bottom_left, settings[param]);
 				break;
 			case "right-width" :
+				setFixWidth.call(div_right, settings[param]);
 				setFixWidth.call(div_top_right, settings[param]);
 				setFixWidth.call(div_bottom_right, settings[param]);
 				break;
 			}
-		});
+		}
 		/** Fit the parent div container. */
 		/** Recalculate height/width of bottom right when resizing. */
 		if(settings["fit"]){
-			if(!div_table4panes.style.width) div_table4panes.style.width = "100%";
-			if(!div_table4panes.style.height) div_table4panes.style.height = "100%";
-			var dw = div_right.offsetWidth-div_top_right.clientWidth;
-			var dh = div_bottom_left.offsetHeight-div_bottom_left.clientHeight;
-			var resize_func = function(){
-				var w = div_table4panes.clientWidth-div_left.offsetWidth-dw;
-				var h = div_table4panes.clientHeight-div_top_left.offsetHeight-dh;
-				setFixWidth.call(div_top_right, w);
-				setFixWidth.call(div_bottom_right, w);
-				setFixHeight.call(div_bottom_left, h);
-				setFixHeight.call(div_bottom_right, h);
+			div_table4panes.style.width = "100%";
+			div_table4panes.style.height = "100%";
+			var viewHeight;
+			if(window.innerHeight){
+				viewHeight = window.innerHeight;
 			}
-			window.addEventListener('resize', resize_func);
+			else{
+				viewHeight = document.documentElement.clientHeight;
+			}
+			div_table4panes.style.height = viewHeight;
+			var rect = div_table4panes.getBoundingClientRect();
+			var diffHeight = rect.top + rect.bottom - viewHeight;
+			var resize_func = function(){
+				var viewHeight;
+				if(window.innerHeight){
+					viewHeight = window.innerHeight;
+				}
+				else{
+					viewHeight = document.documentElement.clientHeight;
+				}
+				div_table4panes.style.height = viewHeight - diffHeight;
+				var right_w = div_table4panes.clientWidth - div_top_left.offsetWidth;
+				var bottom_h = div_table4panes.clientHeight - div_top_left.offsetHeight;
+				setFixWidth.call(div_top_right, right_w);
+				setFixWidth.call(div_bottom_right, right_w);
+				setFixHeight.call(div_bottom_left, bottom_h);
+				setFixHeight.call(div_bottom_right, bottom_h);
+			}
+			addEventListener.call(window, 'resize', resize_func);
 			resize_func.call();
 		}
 		/** Set scroll events to move in sync. */
-		div_top_right.addEventListener('scroll', function(){
-			div_top_left.scrollTop = div_top_right.scrollTop;
+		addEventListener.call(div_top_left, 'scroll', function(){
+			div_top_right.scrollTop = div_top_left.scrollTop;
+			div_bottom_left.scrollLeft = div_top_left.scrollLeft;
 		});
-		div_bottom_left.addEventListener('scroll', function(){
+		addEventListener.call(div_top_right, 'scroll', function(){
+			div_top_left.scrollTop = div_top_right.scrollTop;
+			div_bottom_right.scrollLeft = div_top_right.scrollLeft;
+		});
+		addEventListener.call(div_bottom_left, 'scroll', function(){
+			div_bottom_right.scrollTop = div_bottom_left.scrollTop;
 			div_top_left.scrollLeft = div_bottom_left.scrollLeft;
 		});
-		div_bottom_right.addEventListener('scroll', function(){
+		addEventListener.call(div_bottom_right, 'scroll', function(){
 			div_bottom_left.scrollTop = div_bottom_right.scrollTop;
 			div_top_right.scrollLeft = div_bottom_right.scrollLeft;
 		});
@@ -559,12 +631,49 @@ var Table4Panes = (function() {
 		return div_table4panes;
 	};
 	/**
+	 * Get elements by selector.
+	 */
+	var querySelectorAll = function(selector){
+		if(typeof this.querySelectorAll == "function"){
+			return this.querySelectorAll(selector);
+		}
+		if(selector.charAt(0) == "#"){
+			return [this.getElementById(selector.slice(1))];
+		}
+		var strs = selector.split(".");
+		if(strs[0] == "") strs[0] = "*";
+		var tags = this.getElementsByTagName(strs[0]);
+		if(!strs[1] || strs[1] == ""){
+			return tags;
+		}
+		var elms = [];
+		for(var i = 0; i < tags.length; i++){
+			var clss = tags[i].className.split(" ");
+			for(var j = 0; j < clss.length; j++){
+				if(clss[j] == strs[1]){
+					elms.push(tags[i]);
+					break;
+				}
+			}
+		}
+		return elms;
+	}
+	/**
 	 * Call this function to split the table to four panes.
 	 */
 	Table4Panes.prototype.apply = function(col_num, row_num, settings){
 		var top_nodes = [];
-		var elms = document.querySelectorAll(this.target);
-		for(i = 0; i < elms.length; i++){
+		var elms;
+		if(typeof this.target == "string"){
+			elms = querySelectorAll.call(document, this.target);
+		}
+		else if(this.target.length){
+			elms = this.target;
+		}
+		else{
+			elms = [this.target];
+		}
+		for(var i = 0; i < elms.length; i++){
 			top_nodes.push(table4panes_body.call(elms[i], i, col_num, row_num, settings));
 		}
 		return top_nodes.length == 1 ? top_nodes[0] : top_nodes;

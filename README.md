@@ -1,4 +1,4 @@
-# Table4Panes 1.0.1
+# Table4Panes 1.0.2
  Split the table into 4 panes with only JavaScript without changing the HTML.
 
 ## Demo
@@ -49,13 +49,13 @@ Call the following to fix it in 4 columns and 3 rows and display it on the entir
 In case of JavaScript
 ```js
 var table4panes = new Table4Panes("#demo-table");
-var div = table4panes.apply(4,3,{"display-method":"flex", "width":"100%", "height":"100%", "fit":true});
+var div = table4panes.apply(4,3,{"display-method":"flex", "fit":true});
 ```
 
 In case of jQuery
 ```js
 $(function(){
-    $("#demo-table").table4panes(4,3,{"display-method":"flex", "width":"100%", "height":"100%", "fit":true});
+    $("#demo-table").table4panes(4,3,{"display-method":"flex", "fit":true});
 });
 ```
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.2] - 2020-01-01
+
+- Support IE7 Emulate.
+
 ## [1.0.1] - 2019-11-24
 
 - Fix for IE not working.
