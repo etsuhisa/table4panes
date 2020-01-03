@@ -1,5 +1,6 @@
 /**
- * jquery-table4panes 1.0.2 - jQuery plugin to split the table to four panes.
+ * Table4Panes 1.0.3
+ * Split the table into 4 panes with only JavaScript without changing the HTML.
  *
  * Copyright (c) 2020 ASAI Etsuhisa
  * This software is released under the MIT License.
@@ -9,13 +10,21 @@
  *
  * [Usage]
  * = JavaScript =
+ * ex)
+ *   var table4panes = new Table4Panes("#demo-table");
+ *   var div = table4panes.apply(4,3,{"display-method":"flex", "fit":true});
  * constractor
- *   new Table4Panes(selector)
- *   @param {String} selector (in) selector string of table node(s) to split to the panes.
+ *   new Table4Panes(target)
+ *   @param {String/Node} target (in)
+ *          selector string of table node(s) or table node object(s) to split to the panes.
  * method
  *   Table4Panes.apply(col_num, row_num, settings)
  * 
  * = jQuery =
+ * ex)
+ *   $(function(){
+ *       $("#demo-table").table4panes(4,3,{"display-method":"flex", "fit":true});
+ *   });
  * method
  *   $.fn.table4panes(col_num, row_num, settings)
  *   @param {jQuery} this (in) table node(s) to split to the panes.
@@ -26,6 +35,8 @@
  * @param settings (in) settings for table4panes
  *   "display-method": ("inline-block"|"table-cell"|"flex"|"float") - Select the method.
  *   "fit": (true|flase) - If true, fit the bottom right pane fits the parent node.
+ *     - Specify the width of the margin from the viewport with fit-margin-width.
+ *     - Specify the width of the margin from the viewport with fit-margin-height.
  *   ("height"|"top-height"|"bottom-height"|"width"|"left-width"|"right-width"): size - Set the size.
  *   "fix-width-rows": [lower,upper] or "dummy" - Fix the width of columns
  *                     with the specified numbers of lower/upper row.
@@ -33,38 +44,62 @@
  * @return If single table, return sigle div node. If muntiple tables, return multiple div nodes.
  *
  * From:
- * +- table id --------------------------+
- * | (col_num + ***) x (row_num + ***)   |
- * |                                     |
- * | # with or without thead/tbody/th/td |
- * +-------------------------------------+
+ * +- table id -----------------------------+
+ * |                                        |
+ * |         (row_num + ex_row_num)         |
+ * |                  x                     |
+ * |         (col_num + ex_col_num)         |
+ * |                                        |
+ * |                                        |
+ * | # with or without thead/tbody/th/td    |
+ * +----------------------------------------+
  *
  * To:
- * +- div table4panes -------------------------------------------+
- * |      #id-table4panes                                        |
- * |      .prefix                                                |
- * | +- div left ----------------+ +- div right ---------------+ |
- * | |      #id-left             | |      #id-right            | |
- * | |      .prefix-left         | |      .prefix-right        | |
- * | | +- div top-left --------+ | | +- div top-right -------+ | |
- * | | |      #id-top-left     | | | |      #id-top-right    | | |
- * | | |      .prefix-top      | | | |      .prefix-top      | | |
- * | | |      .pane            | | | |      .pane            | | |
- * | | | +- table -----------+ | | | | +- table -----------+ | | |
- * | | | | col_num x row_num | | | | | | *** x row_num     | | | |
- * | | | +-------------------+ | | | | +-------------------+ | | |
- * | | +-----------------------+ | | +-----------------------+ | |
- * | | +- div bottom-left -----+ | | +- div bottom-right--- -+ | |
- * | | |      #id-bottom-left  | | | |      #id-bottom-right | | |
- * | | |      .prefix-bottom   | | | |      .prefix-bottom   | | |
- * | | |      .pane            | | | |      .pane            | | |
- * | | | +- table -----------+ | | | | +- table id --------+ | | |
- * | | | | col_num x ***     | | | | | | *** x ***         | | | |
- * | | | +-------------------+ | | | | +-------------------+ | | |
- * | | +-----------------------+ | | +-----------------------+ | |
- * | +---------------------------+ +---------------------------+ |
- * +-------------------------------------------------------------+
+ * +--  div table4panes ---------------------------------------------------------+
+ * |        #id-table4panes                                                      |
+ * |        .prefix                                                              |
+ * |                                                                             |
+ * |  +-- div left ---------------------+  +-- div right ---------------------+  |
+ * |  |       #id-left                  |  |       #id-right                  |  |
+ * |  |       .prefix-left              |  |       .prefix-right              |  |
+ * |  |                                 |  |                                  |  |
+ * |  |  +- div top-left ------------+  |  |  +- div top-right ------------+  |  |
+ * |  |  |      #id-top-left         |  |  |  |      #id-top-right         |  |  |
+ * |  |  |      .prefix-top          |  |  |  |      .prefix-top           |  |  |
+ * |  |  |      .pane                |  |  |  |      .pane                 |  |  |
+ * |  |  |                           |  |  |  |                            |  |  |
+ * |  |  |  +- table -------------+  |  |  |  |  +- table --------------+  |  |  |
+ * |  |  |  |                     |  |  |  |  |  |                      |  |  |  |
+ * |  |  |  |       row_num       |  |  |  |  |  |      ex_col_num      |  |  |  |
+ * |  |  |  |          x          |  |  |  |  |  |          x           |  |  |  |
+ * |  |  |  |       col_num       |  |  |  |  |  |       row_num        |  |  |  |
+ * |  |  |  |                     |  |  |  |  |  |                      |  |  |  |
+ * |  |  |  +---------------------+  |  |  |  |  +----------------------+  |  |  |
+ * |  |  |                           |  |  |  |                            |  |  |
+ * |  |  +---------------------------+  |  |  +----------------------------+  |  |
+ * |  |                                 |  |                                  |  |
+ * |  |  +- div bottom-left ---------+  |  |  +- div bottom-right----------+  |  |
+ * |  |  |      #id-bottom-left      |  |  |  |      #id-bottom-right      |  |  |
+ * |  |  |      .prefix-bottom       |  |  |  |      .prefix-bottom        |  |  |
+ * |  |  |      .pane                |  |  |  |      .pane                 |  |  |
+ * |  |  |                           |  |  |  |                            |  |  |
+ * |  |  |  +- table -------------+  |  |  |  |  +- table --------------+  |  |  |
+ * |  |  |  |                     |  |  |  |  |  |                      |  |  |  |
+ * |  |  |  |      ex_row_num     |  |  |  |  |  |      ex_col_num      |  |  |  |
+ * |  |  |  |          x          |  |  |  |  |  |          x           |  |  |  |
+ * |  |  |  |       col_num       |  |  |  |  |  |      ex_row_num      |  |  |  |
+ * |  |  |  |                     |  |  |  |  |  |                      |  |  |  |
+ * |  |  |  +---------------------+  |  |  |  |  +----------------------+  |  |  |
+ * |  |  |                           |  |  |  |                            |  |  |
+ * |  |  +---------------------------+  |  |  +----------------------------+  |  |
+ * |  |                                 |  |                                  |  |
+ * |  +---------------------------------+  +----------------------------------+  |
+ * |                                                                             |
+ * +-----------------------------------------------------------------------------+
  *
+ */
+/**
+ * Constructor for Table4Panes
  */
 var Table4Panes = (function() {
 	var Table4Panes = function(target) {
@@ -93,6 +128,13 @@ var Table4Panes = (function() {
 			return this.classList.add(name);
 		}
 	}
+	/**
+	 * addEventListener(type, listener)
+	 * If addEventListener is not defined, use attachEvent insteat of addEventListener.
+	 * @param this (in) node
+	 * @param name (in) class name
+	 * @return following each function
+	 */
 	if(typeof document.addEventListener == "undefined"){
 		var addEventListener = function(type, listener) {
 			return this.attachEvent("on"+type, listener);
@@ -434,6 +476,38 @@ var Table4Panes = (function() {
 		return this.getElementsByTagName("tr")[row_num].children[nums[row_num]];
 	}
 	/**
+	 * Get view port size (width/height).
+	 */
+	var getViewPortSize_function = null;
+	var getViewPortSize = function(){
+		if(getViewPortSize_function){
+			return getViewPortSize_function();
+		}
+		var size = {width: 99999, height: 99999};
+		/** Normal */
+		if(window.innerHeight){
+			getViewPortSize_function = function(){
+				return {width: window.innerWidth, height: window.innerHeight};
+			}
+			size = getViewPortSize_function();
+		}
+		/** IE5 Emulate */
+		if(document.body.clientHeight > 0 && document.body.clientHeight < size.height){
+			getViewPortSize_function = function(){
+				return {width: document.body.clientWidth, height: document.body.clientHeight};
+			}
+			size = getViewPortSize_function();
+		}
+		/** IE7 Emulate */
+		if(document.documentElement.clientHeight > 0 && document.documentElement.clientHeight < size.height){
+			getViewPortSize_function = function(){
+				return {width: document.documentElement.clientWidth, height: document.documentElement.clientHeight};
+			}
+			size = getViewPortSize_function();
+		}
+		return size;
+	}
+	/**
 	 * Body of table4panes.
 	 */
 	var table4panes_body = function(index, col_num, row_num, settings){
@@ -545,6 +619,7 @@ var Table4Panes = (function() {
 		case "float" :
 		default :
 			div_left.style.float = "left";
+			div_right.style.float = "left";
 			break;
 		}
 		/** Set height/width from settings. */
@@ -579,36 +654,32 @@ var Table4Panes = (function() {
 		/** Fit the parent div container. */
 		/** Recalculate height/width of bottom right when resizing. */
 		if(settings["fit"]){
-			div_table4panes.style.width = "100%";
-			div_table4panes.style.height = "100%";
-			var viewHeight;
-			if(window.innerHeight){
-				viewHeight = window.innerHeight;
+			var rect_table = div_table4panes.getBoundingClientRect();
+			var margin_width = rect_table.left * 2;
+			var margin_height = rect_table.top * 2;
+			if(settings["fit-margin-width"]){
+				margin_width = settings["fit-margin-width"];
 			}
-			else{
-				viewHeight = document.documentElement.clientHeight;
+			if(settings["fit-margin-height"]){
+				margin_height = settings["fit-margin-height"];
 			}
-			div_table4panes.style.height = viewHeight;
-			var rect = div_table4panes.getBoundingClientRect();
-			var diffHeight = rect.top + rect.bottom - viewHeight;
 			var resize_func = function(){
-				var viewHeight;
-				if(window.innerHeight){
-					viewHeight = window.innerHeight;
-				}
-				else{
-					viewHeight = document.documentElement.clientHeight;
-				}
-				div_table4panes.style.height = viewHeight - diffHeight;
-				var right_w = div_table4panes.clientWidth - div_top_left.offsetWidth;
-				var bottom_h = div_table4panes.clientHeight - div_top_left.offsetHeight;
-				setFixWidth.call(div_top_right, right_w);
-				setFixWidth.call(div_bottom_right, right_w);
-				setFixHeight.call(div_bottom_left, bottom_h);
-				setFixHeight.call(div_bottom_right, bottom_h);
+				var rect_view = getViewPortSize();
+				var div_width = rect_view.width - margin_width;
+				var div_height = rect_view.height - margin_height;
+				if(div_width <= div_top_left.offsetWidth) div_width = div_top_left.offsetWidth + 1;
+				if(div_height <= div_top_left.offsetHeight) div_height = div_top_left.offsetHeight + 1;
+				div_table4panes.style.width = div_width;
+				div_table4panes.style.height = div_height;
+				div_width -= div_top_left.offsetWidth;
+				div_height -= div_top_left.offsetHeight;
+				setFixWidth.call(div_top_right, div_width);
+				setFixWidth.call(div_bottom_right, div_width);
+				setFixHeight.call(div_bottom_left, div_height);
+				setFixHeight.call(div_bottom_right, div_height);
 			}
-			addEventListener.call(window, 'resize', resize_func);
 			resize_func.call();
+			addEventListener.call(window, 'resize', resize_func);
 		}
 		/** Set scroll events to move in sync. */
 		addEventListener.call(div_top_left, 'scroll', function(){

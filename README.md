@@ -1,9 +1,10 @@
-# Table4Panes 1.0.2
+# Table4Panes 1.0.3
  Split the table into 4 panes with only JavaScript without changing the HTML.
 
 ## Demo
 Refer the following HTML files:
 * demo-table4panes.html         Basic call
+* demo-table4panes_float.html   Display with float
 * demo-table4panes_event.html   Event settings for panes
 * demo-table4panes-jquery.html  Call with jQuery
 * demo-table4panes_multi.html   Batch specification of multiple tables
@@ -70,6 +71,8 @@ The "display-method" option can be one of the following CSS side-by-side methods
 
 ### "fit"
 If it is true, the bottom right pane fits the parent node.
+* Specify the width of the margin from the viewport with fit-margin-width.
+* Specify the width of the margin from the viewport with fit-margin-height.
 
 ### Size
 The size of each pane is specified the following:
@@ -84,6 +87,14 @@ If the fix-width-rows value is set to "dummy", column widths are fixed by insert
 
 ### "prefix"
 The option changes the class name prefix from the default "table4panes".
+
+## Support browser
+Operation has been confirmed on the following browsers.
+* Chrome
+* Firfox
+* Microsoft Edge
+* Internet Explorer 11
+  Notice: Available functions are limited in IE* Emulation.
 
 ## License
 Copyright &copy; ASAI Etsuhisa<br>

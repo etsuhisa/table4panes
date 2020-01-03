@@ -1,9 +1,10 @@
-# Table4Panes 1.0.1
+# Table4Panes 1.0.3
  HTML‚ğ•ÏX‚¹‚¸‚ÉjavaScript‚¾‚¯‚Åƒe[ƒuƒ‹‚ğ4‚Â‚ÌƒyƒCƒ“‚É•ªŠ„‚µ‚Ü‚·B
 
 ## ƒfƒ‚
 ˆÈ‰º‚ÌHTMLƒtƒ@ƒCƒ‹‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 * demo-table4panes.html         Šî–{“I‚ÈŒÄ‚Ño‚µ
+* demo-table4panes_float.html   float‚Å‚Ì•\¦
 * demo-table4panes_event.html   ƒyƒCƒ“‚É‘Î‚·‚éƒCƒxƒ“ƒgİ’è
 * demo-table4panes-jquery.html  jQuery‚Å‚ÌŒÄ‚Ño‚µ
 * demo-table4panes_multi.html   •¡”ƒe[ƒuƒ‹‚ÌˆêŠ‡w’è
@@ -70,6 +71,8 @@ $(function(){
 
 ### "fit"
 true‚È‚ç‰E‰º‚ÌƒyƒCƒ“‚ğeƒm[ƒh‚ÌƒTƒCƒY‚É‡‚í‚¹‚Ä”z’u‚µ‚Ü‚·B
+* fit-margin-width‚Åƒrƒ…[ƒ|[ƒg‚©‚ç‚Ìƒ}[ƒWƒ“‚Ì•‚ğw’è‚µ‚Ü‚·B
+* fit-margin-height‚Åƒrƒ…[ƒ|[ƒg‚©‚ç‚Ìƒ}[ƒWƒ“‚Ì•‚ğw’è‚µ‚Ü‚·B
 
 ### ƒTƒCƒY
 ŠeƒyƒCƒ“‚ÌƒTƒCƒY‚ğˆÈ‰º‚Åw’è‚µ‚Ü‚·B
@@ -84,6 +87,14 @@ fix-width-rows‚É"dummy"‚ğw’è‚µ‚½ê‡A—ñ•‚ÍŠeƒyƒCƒ“‚É‘}“ü‚³‚ê‚½ƒ_ƒ~[‚Ìs‚ÅŒÅ’
 
 ### "prefix"
 ‚±‚ÌƒIƒvƒVƒ‡ƒ“‚ÍƒNƒ‰ƒX–¼‚ÌƒvƒŒƒtƒBƒbƒNƒX‚ğƒfƒtƒHƒ‹ƒg‚Ì"table4panes"‚©‚ç•ÏX‚µ‚Ü‚·B
+
+## ƒTƒ|[ƒgƒuƒ‰ƒEƒU
+ˆÈ‰º‚Ìƒuƒ‰ƒEƒU‚Å“®ì‚ğŠm”F‚µ‚Ä‚¢‚Ü‚·B
+* Chrome
+* Firfox
+* Microsoft Edge
+* Internet Explorer 11
+  ’FIE*ƒGƒ~ƒ…ƒŒ[ƒg‚Å‚Í—˜—p‚Å‚«‚é‹@”\‚É§ŒÀ‚ª‚ ‚è‚Ü‚·B
 
 ## ƒ‰ƒCƒZƒ“ƒX
 Copyright &copy; ASAI Etsuhisa<br>

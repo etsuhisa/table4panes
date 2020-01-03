@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.0.3] - 2020-01-03
+
+- Support IE5 Emulate.
+- Changed `fit' option to fit width and height to browser viewport.
+
 ## [1.0.2] - 2020-01-01
 
 - Support IE7 Emulate.
